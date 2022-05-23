@@ -1,0 +1,15 @@
+topic,term,pattern
+biology,DNA,dna
+biology,Pandemic,pandemic
+
+adastra,Space,space
+
+computing,Quantum Computing,quantum comput[^ ]+
+computing,Algorithms,algorithm
+computing,Microelectronics,(microelectronic|semiconductor|chip)s?
+computing,Computer,computer
+
+climate,Climate Change,climate change
+climate,NOAA,noaa
+climate,Weather,(hurricane|tornado|flood)
+
