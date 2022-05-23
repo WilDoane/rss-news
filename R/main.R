@@ -6,6 +6,10 @@
 
 # Overload default behavior to install missing packages --------------------
 
+`%!in%` <- function(x, table) {
+  !(x %in% table)
+}
+
 library <- function(pkg, ...) {
   pkg <- sapply(substitute(list(pkg))[[-1]], deparse)
   
@@ -32,9 +36,10 @@ suppressPackageStartupMessages({
   # library(mailR)
 })
 
-config_path <- "data"
-rss_path <- "downloaded-rss-items"
-output_path <- "output"
+config_path <- here::here("data")
+rss_path <- here::here("downloaded-rss-items")
+output_path <- here::here("output")
+errors_path <- here::here(config_path, "errors.txt")
 
 dir.create(rss_path, showWarnings = FALSE)
 dir.create(output_path, showWarnings = FALSE)
@@ -66,6 +71,8 @@ down_select <- function(data) {
     select(any_of(c("feed_title", "item_title", "item_link", "item_description", "item_pub_date")))
 }
 
+unlink(errors_path)
+
 rss_items_lst <- 
   pmap(urls, function(url) {
     filename <- file.path(rss_path, Sys.Date(), paste0(make_clean_names(url), ".csv"))
@@ -74,11 +81,14 @@ rss_items_lst <-
     dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
     
     if (!file.exists(filename)) {
-      try(
+      tryCatch({
         # download new feeds
         tidyfeed(url, parse_dates = TRUE) %>% 
           write_csv(filename) %>% 
           down_select()
+      }, error = function(e) {
+        write(url, file = errors_path, append = TRUE)
+      }
       )
     } else {
       # load already downloaded feeds
@@ -87,6 +97,14 @@ rss_items_lst <-
     }
   }) 
 
+# Remove URLs for feeds that errored
+bad_urls <- readLines(errors_path)
+
+good_urls <- urls[urls$url %!in% bad_urls, ]
+
+write_csv(good_urls, here::here(config_path, "news-feeds.csv"))
+
+# Extract new RSS items
 rss_items <- 
   map_df(
     rss_items_lst, 
