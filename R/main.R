@@ -13,8 +13,8 @@
 library <- function(pkg, ...) {
   pkg <- sapply(substitute(list(pkg))[[-1]], deparse)
   
-  install.packages(pkg[!pkg %in% installed.packages()[,1]], dependencies = TRUE)
-  invisible(base::library(pkg, character.only = TRUE, ...))
+  install.packages(pkg[!pkg %in% rownames(installed.packages())], dependencies = TRUE)
+  invisible(base::library(pkg, ..., character.only = TRUE))
 }
 
 suppressPackageStartupMessages({
