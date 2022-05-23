@@ -5,7 +5,6 @@ items from them, then produce a number of Microsoft Word documents reporting
 the RSS items that match a given set of key terms.
 
 ## RSS FEED URLS
-==========================================================================
 
 The feed URLs are stored in data-raw/news-feeds.csv
 
@@ -30,7 +29,7 @@ and so on.
   
   
 ## KEY TERMS
-==========================================================================
+
 The key terms to search for are stored in data-raw/watch-terms.csv
 
 That file contains a header row followed by one regular expression per row.
@@ -78,7 +77,7 @@ RSS items may appear in more than one report, if multiple patterns are matched.
   
   
 ## SENDING EMAIL TO SUBSCRIBERS
-==========================================================================
+
 The list of active subscribers are stored in data-raw/subscribers.csv
 
 The file contains a header row followed by one subscriber per row.
