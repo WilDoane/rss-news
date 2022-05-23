@@ -97,12 +97,14 @@ rss_items_lst <-
     }
   }) 
 
-# Remove URLs for feeds that errored
-bad_urls <- readLines(errors_path)
-
-good_urls <- urls[urls$url %!in% bad_urls, ]
-
-write_csv(good_urls, here::here(config_path, "news-feeds.csv"))
+if (file.exists(errors_path)) {
+  # Remove URLs for feeds that errored
+  bad_urls <- readLines(errors_path)
+  
+  good_urls <- urls[urls$url %!in% bad_urls, ]
+  
+  write_csv(good_urls, here::here(config_path, "news-feeds.csv"))
+}
 
 # Extract new RSS items
 rss_items <- 
